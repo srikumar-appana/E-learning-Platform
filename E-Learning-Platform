@@ -1,0 +1,4345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NaxBot - Gamified Learning Platform</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Spline 3D Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.53/build/spline-viewer.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-yellow: rgb(255, 215, 0);
+            --gold-vibrant: rgb(255, 193, 7);
+            --black: rgb(0, 0, 0);
+            --white: rgb(255, 255, 255);
+            --shadow-glow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
+            --font-primary: "Inter", sans-serif;
+            --font-secondary: "Poppins", sans-serif;
+            --primary-color: rgb(255, 215, 0);
+            --secondary-color: rgb(40, 167, 69);
+            --danger-color: rgb(220, 53, 69);
+            --text-gray: rgba(255, 215, 0, 0.7);
+            --dark-bg: rgb(0, 0, 0);
+            --card-bg: rgb(0, 0, 0);
+            --text-light: rgb(255, 215, 0);
+            --border-color: rgb(255, 215, 0);
+            --gradient-1: linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(255, 215, 0) 100%);
+            --gradient-2: linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(255, 215, 0) 100%);
+            --gradient-3: linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(255, 215, 0) 100%);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--black);
+            color: var(--gold-yellow);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Main Container */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--black);
+        }
+
+        /* Header */
+        .header {
+            background: var(--gold-yellow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: var(--black);
+            color: var(--gold-yellow);
+            border: 2px solid var(--black);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-primary);
+        }
+
+        .nav-btn:hover {
+            background: var(--gold-yellow);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: var(--black);
+            padding: 2rem 0;
+        }
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                    circle at 20% 80%,
+                    rgba(255, 215, 0, 0.1) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(255, 215, 0, 0.1) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 40% 40%,
+                    rgba(255, 215, 0, 0.05) 0%,
+                    transparent 50%
+                );
+            animation: backgroundFloat 8s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes backgroundFloat {
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(1deg);
+            }
+        }
+
+        .hero-text {
+            text-align: left;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            font-family: var(--font-primary);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(
+                135deg,
+                var(--gold-yellow),
+                var(--gold-yellow)
+            );
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: titleShimmer 3s ease-in-out infinite,
+                titleFloat 4s ease-in-out infinite;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        @keyframes titleShimmer {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes titleFloat {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--gold-yellow);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: subtitlePulse 2s ease-in-out infinite;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes subtitlePulse {
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: var(--font-secondary);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(
+                135deg,
+                var(--gold-yellow) 0%,
+                var(--gold-vibrant) 100%
+            );
+            color: var(--black);
+            box-shadow: var(--shadow-glow-gold);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(
+                135deg,
+                var(--gold-vibrant) 0%,
+                var(--gold-yellow) 100%
+            );
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+            animation: buttonBounce 0.6s ease-in-out;
+        }
+
+        @keyframes buttonBounce {
+            0%,
+            100% {
+                transform: translateY(-3px) scale(1.05);
+            }
+            50% {
+                transform: translateY(-6px) scale(1.08);
+            }
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold-yellow);
+            border: 2px solid var(--gold-yellow);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gold-yellow);
+            color: var(--black);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+            animation: buttonBounce 0.6s ease-in-out;
+        }
+
+        /* Robot Section */
+        .robot-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+
+        .robot-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--gold-yellow);
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        spline-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Hide Spline watermark with educational quote overlay */
+        .spline-watermark-cover {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--gold-yellow);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--gold-yellow);
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Education Thoughts Display */
+        .thoughts-display {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--gold-yellow);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--gold-yellow);
+            font-size: 1rem;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            z-index: 5;
+        }
+
+        .thought-text {
+            margin: 0;
+            padding: 0;
+            color: var(--gold-yellow);
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            animation: thoughtGlow 2s ease-in-out infinite alternate;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes thoughtGlow {
+            0% {
+                text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+                transform: scale(1);
+            }
+            100% {
+                text-shadow: 0 0 15px rgba(255, 215, 0, 1),
+                    0 0 25px rgba(255, 215, 0, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        /* Auth Icons */
+        .auth-icons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .auth-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--gold-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gold-yellow);
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .auth-icon:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            animation: iconSpin 0.5s ease-in-out;
+        }
+
+        @keyframes iconSpin {
+            0% {
+                transform: scale(1.1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(10deg);
+            }
+            100% {
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+        /* Features Section */
+        .section {
+            padding: 100px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: var(--font-primary);
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            font-weight: 700;
+            background: linear-gradient(
+                90deg,
+                var(--gold-yellow),
+                var(--gold-yellow)
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, var(--black), var(--black));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: var(--gold-yellow);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--gold-yellow);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-family: var(--font-primary);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--gold-yellow);
+            font-weight: 600;
+        }
+
+        /* Leaderboard Section */
+        .leaderboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, var(--black), var(--black));
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--gold-yellow);
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        .leaderboard-header {
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--gold-yellow);
+            font-weight: 600;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            color: var(--gold-yellow);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .leaderboard-rank {
+            font-weight: 700;
+            width: 30px;
+            text-align: center;
+            color: var(--gold-yellow);
+            font-family: var(--font-primary);
+        }
+
+        .leaderboard-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--gold-vibrant);
+        }
+
+        .leaderboard-xp {
+            color: var(--gold-yellow);
+            font-family: var(--font-primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--black);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--gold-yellow);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            display: none;
+            position: relative;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gold-yellow);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--gold-yellow);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Forms */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--gold-yellow);
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.75rem;
+            border: 1px solid var(--gold-yellow);
+            border-radius: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold-yellow);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: var(--font-primary);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--gold-yellow);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 215, 0, 0.6);
+        }
+
+        /* User Type Selection */
+        .user-type-selection {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-type-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--gold-yellow);
+            background: transparent;
+            color: var(--gold-yellow);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: var(--font-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-type-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 215, 0, 0.2),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+
+        .user-type-btn:hover::before {
+            left: 100%;
+        }
+
+        .user-type-btn.active {
+            border-color: var(--gold-yellow);
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold-yellow);
+            animation: activeButtonPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes activeButtonPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .auth-icons {
+                position: relative;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+
+            .robot-container {
+                height: 300px;
+            }
+        }
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 400px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--secondary-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.info {
+            background: var(--primary-color);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-icon.students {
+            background: var(--gradient-1);
+        }
+        .card-icon.games {
+            background: var(--gradient-1);
+        }
+        .card-icon.analytics {
+            background: var(--gradient-1);
+        }
+        .card-icon.settings {
+            background: var(--gradient-1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-description {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Students Table */
+        .students-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--dark-bg);
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .data-table td {
+            color: var(--text-gray);
+        }
+
+        .data-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .student-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .grade-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary-color);
+        }
+
+        .score-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .score-badge.high {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .score-badge.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-color);
+        }
+
+        .score-badge.low {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: var(--gradient-1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text p {
+            font-size: 1.1rem;
+            color: #e0e7ff;
+            margin-bottom: 1.5rem;
+        }
+
+        /* STEM Subjects Section */
+        .subjects-section {
+            margin-bottom: 2rem;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .subject-card {
+            background: var(--black);
+            border: 1px solid var(--gold-yellow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+            border-color: var(--gold-yellow);
+        }
+
+        .subject-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .subject-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .subject-icon.math {
+            background: var(--gradient-1);
+        }
+        .subject-icon.science {
+            background: var(--gradient-2);
+        }
+        .subject-icon.technology {
+            background: var(--gradient-3);
+        }
+        .subject-icon.engineering {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+
+        .subject-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .subject-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .subject-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .lessons-list {
+            margin-top: 1rem;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold-yellow);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .lesson-item.completed {
+            background: rgba(255, 215, 0, 0.3);
+            border: 1px solid var(--gold-yellow);
+        }
+
+        .lesson-item.current {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid var(--gold-yellow);
+        }
+
+        .lesson-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .lesson-icon.completed {
+            background: var(--gold-yellow);
+            color: var(--black);
+        }
+        .lesson-icon.current {
+            background: var(--gold-yellow);
+            color: var(--black);
+        }
+        .lesson-icon.locked {
+            background: rgba(255, 215, 0, 0.3);
+            color: var(--gold-yellow);
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .lesson-desc {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .lesson-action {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-action.start {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .lesson-action.exam {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .lesson-action:disabled {
+            background: var(--text-gray);
+            cursor: not-allowed;
+        }
+
+        /* Exam Modal Styles */
+        .exam-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .exam-modal {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .exam-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .exam-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .exam-modal-close {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .exam-modal-close:hover {
+            color: var(--text-light);
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option {
+            padding: 1rem;
+            background: var(--dark-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .option:hover {
+            border-color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .option.correct {
+            border-color: var(--secondary-color);
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .option.incorrect {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .option-letter {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .option.selected .option-letter {
+            background: var(--primary-color);
+        }
+
+        .option.correct .option-letter {
+            background: var(--secondary-color);
+        }
+
+        .option.incorrect .option-letter {
+            background: var(--danger-color);
+        }
+
+        .exam-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .exam-progress {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .exam-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Result Modal Styles */
+        .result-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .result-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .result-icon.excellent {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .result-icon.good {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .result-icon.average {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .result-icon.poor {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-detail {
+            background: var(--dark-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-detail h4 {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-detail p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        /* Celebration Animation */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .thumbs-up {
+            position: absolute;
+            font-size: 2rem;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Games Section */
+        .games-section {
+            margin-bottom: 2rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-description {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Game Container */
+        .game-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .game-instructions {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .game-content {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Math Game Styles */
+        .math-game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .math-card {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .math-card:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .math-card.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .math-card.matched {
+            background: var(--secondary-color);
+            color: white;
+            cursor: default;
+        }
+
+        /* Science Game Styles */
+        .science-quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .science-quiz-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .science-quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .science-quiz-option {
+            padding: 1rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .science-quiz-option:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .science-quiz-option.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Technology Game Styles */
+        .tech-game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .tech-game-code {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+            font-family: monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .tech-game-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .tech-game-option {
+            padding: 1rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tech-game-option:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .tech-game-option.correct {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .tech-game-option.incorrect {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Engineering Game Styles */
+        .engineering-game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .engineering-game-problem {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .engineering-game-solution {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .engineering-game-piece {
+            padding: 1rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .engineering-game-piece:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .engineering-game-piece.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Game Controls */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .game-score {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .game-timer {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .welcome-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .result-details {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .exam-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .math-game-board {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .tech-game-options {
+                grid-template-columns: 1fr;
+            }
+
+            .engineering-game-solution {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="container header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>NaxBot</span>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="showModal('loginModal')">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                    <button class="nav-btn secondary" onclick="showModal('registerModal')">
+                        <i class="fas fa-user-plus"></i>
+                        Register
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <main class="hero-section">
+            <div class="container">
+                <div class="hero-content" style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 4rem;
+                    align-items: center;
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    padding: 0 2rem;
+                ">
+                    <div class="hero-text">
+                        <h1 class="hero-title">Welcome to NaxBot</h1>
+                        <p class="hero-subtitle">
+                            The ultimate gamified learning platform for students from 1st to
+                            12th grade. Learn through interactive games, earn points, and
+                            climb the leaderboard!
+                        </p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary" onclick="showModal('loginModal')">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Start Learning
+                            </button>
+                            <button class="btn btn-secondary" onclick="showModal('registerModal')">
+                                <i class="fas fa-user-plus"></i>
+                                Join Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="robot-section">
+                        <div class="robot-container">
+                            <spline-viewer
+                                url="https://prod.spline.design/mx6OpZFrORvpnT0h/scene.splinecode"
+                            ></spline-viewer>
+
+                            <!-- Education Thoughts Display -->
+                            <div class="thoughts-display" id="thoughtsDisplay">
+                                Welcome to the future of rural education! 🤖✨
+                            </div>
+
+                            <!-- Spline Watermark Cover -->
+                            <div class="spline-watermark-cover">
+                                💡 Powered by AI Learning
+                            </div>
+
+                            <!-- Auth Icons -->
+                            <div class="auth-icons">
+                                <div class="auth-icon" onclick="showModal('loginModal')" title="Login">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </div>
+                                <div class="auth-icon" onclick="showModal('registerModal')" title="Register">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Features Section -->
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title hidden-anim">Why NaxBot?</h2>
+                <div class="features-grid">
+                    <div class="feature-card hidden-anim" style="transition-delay: 0.1s">
+                        <i class="fas fa-gamepad feature-icon"></i>
+                        <h3 class="feature-title">Engaging Quests</h3>
+                        <p>
+                            Learn by completing fun, story-driven quests that make education
+                            feel like an adventure.
+                        </p>
+                    </div>
+                    <div class="feature-card hidden-anim" style="transition-delay: 0.2s">
+                        <i class="fas fa-chart-line feature-icon"></i>
+                        <h3 class="feature-title">Progress Tracking</h3>
+                        <p>
+                            Our dashboard visualizes your strengths, helping you focus your
+                            efforts where they matter most.
+                        </p>
+                    </div>
+                    <div class="feature-card hidden-anim" style="transition-delay: 0.3s">
+                        <i class="fas fa-trophy feature-icon"></i>
+                        <h3 class="feature-title">Live Leaderboards</h3>
+                        <p>
+                            Compete with students globally. Earn points, climb ranks, and
+                            showcase your mastery.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard Section -->
+        <section id="leaderboard" class="section">
+            <div class="container">
+                <h2 class="section-title hidden-anim">Climb the Global Ranks</h2>
+                <div class="leaderboard-container hidden-anim" id="leaderboard-container">
+                    <div class="leaderboard-header">
+                        <div>Player</div>
+                        <div>XP</div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-user">
+                            <span class="leaderboard-rank">1</span>
+                            <img
+                                src="https://placehold.co/80x80/00A8FF/white?text=A"
+                                alt="Alex"
+                                class="leaderboard-avatar"
+                            />
+                            <span>Alex</span>
+                        </div>
+                        <span class="leaderboard-xp">24,580</span>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-user">
+                            <span class="leaderboard-rank">2</span>
+                            <img
+                                src="https://placehold.co/80x80/00A8FF/white?text=C"
+                                alt="CyberNeko"
+                                class="leaderboard-avatar"
+                            />
+                            <span>CyberNeko</span>
+                        </div>
+                        <span class="leaderboard-xp">23,120</span>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-user">
+                            <span class="leaderboard-rank">3</span>
+                            <img
+                                src="https://placehold.co/80x80/00A8FF/white?text=P"
+                                alt="PixelPro"
+                                class="leaderboard-avatar"
+                            />
+                            <span>PixelPro</span>
+                        </div>
+                        <span class="leaderboard-xp">22,890</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modals -->
+        <div class="modal-overlay" id="modalOverlay">
+            <!-- Login Modal -->
+            <div class="modal" id="loginModal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Welcome Back!</h3>
+                    <button class="modal-close" onclick="closeModal('loginModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="auth-form" id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label" for="loginEmail">Email Address</label>
+                            <input
+                                type="email"
+                                class="form-input"
+                                id="loginEmail"
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="loginPassword">Password</label>
+                            <input
+                                type="password"
+                                class="form-input"
+                                id="loginPassword"
+                                placeholder="Enter your password"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </button>
+                    </form>
+                    <div style="text-align: center; margin-top: 1rem">
+                        <p style="color: var(--text-gray)">
+                            Don't have an account?
+                            <a
+                                href="#"
+                                onclick="closeModal('loginModal'); showModal('registerModal');"
+                                style="color: var(--primary-color); text-decoration: none"
+                                >Register here</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Modal -->
+            <div class="modal" id="registerModal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Join NaxBot</h3>
+                    <button class="modal-close" onclick="closeModal('registerModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="auth-form" id="registerForm">
+                        <div class="form-group">
+                            <label class="form-label">I am a:</label>
+                            <div class="user-type-selection">
+                                <button
+                                    type="button"
+                                    class="user-type-btn active"
+                                    data-type="student"
+                                >
+                                    <i class="fas fa-user-graduate"></i>
+                                    Student
+                                </button>
+                                <button type="button" class="user-type-btn" data-type="admin">
+                                    <i class="fas fa-user-shield"></i>
+                                    Admin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="registerFirstName"
+                                >First Name</label
+                            >
+                            <input
+                                type="text"
+                                class="form-input"
+                                id="registerFirstName"
+                                placeholder="Enter your first name"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="registerLastName">Last Name</label>
+                            <input
+                                type="text"
+                                class="form-input"
+                                id="registerLastName"
+                                placeholder="Enter your last name"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="registerEmail"
+                                >Email Address</label
+                            >
+                            <input
+                                type="email"
+                                class="form-input"
+                                id="registerEmail"
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                        <div class="form-group" id="gradeGroup">
+                            <label class="form-label" for="registerGrade">Grade Level</label>
+                            <select class="form-select" id="registerGrade" required>
+                                <option value="">Select your grade</option>
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                                <option value="7">Grade 7</option>
+                                <option value="8">Grade 8</option>
+                                <option value="9">Grade 9</option>
+                                <option value="10">Grade 10</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="registerPassword">Password</label>
+                            <input
+                                type="password"
+                                class="form-input"
+                                id="registerPassword"
+                                placeholder="Create a password"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="registerConfirmPassword"
+                                >Confirm Password</label
+                            >
+                            <input
+                                type="password"
+                                class="form-input"
+                                id="registerConfirmPassword"
+                                placeholder="Confirm your password"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Create Account
+                        </button>
+                    </form>
+                    <div style="text-align: center; margin-top: 1rem">
+                        <p style="color: var(--text-gray)">
+                            Already have an account?
+                            <a
+                                href="#"
+                                onclick="closeModal('registerModal'); showModal('loginModal');"
+                                style="color: var(--primary-color); text-decoration: none"
+                                >Login here</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="student-dashboard" class="main-container" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>NaxBot</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">SU</div>
+                    <div class="user-details">
+                        <h3 id="userName">Student User</h3>
+                        <p id="userGrade">Grade 8 • Level 1</p>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h1>Welcome back, <span id="welcomeName">Student</span>!</h1>
+                        <p>Continue your learning journey and unlock new achievements</p>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalPoints">0</div>
+                                <div class="stat-label">Total Points</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="currentLevel">1</div>
+                                <div class="stat-label">Current Level</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="completedLessons">0</div>
+                                <div class="stat-label">Lessons Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="robot-section">
+                        <spline-viewer
+                            url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
+                        ></spline-viewer>
+                        <!-- Spline Watermark Cover -->
+                        <div class="spline-watermark-cover">🎓 Learning Hub</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Games Section -->
+            <section class="games-section">
+                <h2 class="section-title">Educational Games</h2>
+                <div class="games-grid" id="gamesGrid">
+                    <!-- Games will be loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- STEM Subjects Section -->
+            <section class="subjects-section">
+                <h2 class="section-title">STEM Subjects</h2>
+                <div class="subjects-grid" id="subjectsGrid">
+                    <!-- Subjects will be loaded dynamically -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Game Container -->
+        <div class="game-container" id="gameContainer" style="display: none;">
+            <div class="game-header">
+                <h2 id="gameTitle">Educational Game</h2>
+                <div class="game-score" id="gameScore">Score: 0</div>
+                <div class="game-timer" id="gameTimer">Time: 60s</div>
+            </div>
+            <div class="game-instructions" id="gameInstructions">
+                <!-- Instructions will be loaded dynamically -->
+            </div>
+            <div class="game-content" id="gameContent">
+                <!-- Game content will be loaded dynamically -->
+            </div>
+            <div class="game-controls">
+                <button class="btn btn-secondary" onclick="exitGame()">
+                    <i class="fas fa-arrow-left"></i>
+                    Exit Game
+                </button>
+                <button class="btn btn-primary" id="gameNextBtn" onclick="nextGameLevel()" style="display: none;">
+                    Next Level
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Exam Modal -->
+        <div class="exam-modal-overlay" id="examModal">
+            <div class="exam-modal">
+                <div class="exam-modal-header">
+                    <h3 class="exam-modal-title" id="examTitle">Exam</h3>
+                    <button class="exam-modal-close" onclick="closeExamModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="exam-modal-body" id="examBody">
+                    <!-- Exam content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Modal -->
+        <div class="exam-modal-overlay" id="resultModal">
+            <div class="exam-modal">
+                <div class="exam-modal-header">
+                    <h3 class="exam-modal-title">Exam Results</h3>
+                    <button class="exam-modal-close" onclick="closeResultModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="exam-modal-body">
+                    <div class="result-container" id="resultContainer">
+                        <!-- Result content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Celebration Container -->
+        <div class="celebration" id="celebration"></div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="main-container" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>NaxBot Admin</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="adminUserAvatar">AD</div>
+                    <div class="user-details">
+                        <h3 id="adminUserName">Admin User</h3>
+                        <p>Administrator</p>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalStudents">0</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeStudents">0</div>
+                    <div class="stat-label">Active Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalLessons">0</div>
+                    <div class="stat-label">Total Lessons</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgScore">0%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon students">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Student Management</div>
+                            <div class="card-description">View and manage all students</div>
+                        </div>
+                    </div>
+                    <p>
+                        Monitor student progress, view detailed analytics, and manage
+                        student accounts.
+                    </p>
+                    <button class="btn btn-primary" onclick="scrollToSection('students-section')">
+                        <i class="fas fa-arrow-right"></i>
+                        Manage Students
+                    </button>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon games">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Content Management</div>
+                            <div class="card-description">Manage lessons and games</div>
+                        </div>
+                    </div>
+                    <p>
+                        Create and edit educational content, manage STEM subjects and lesson
+                        materials.
+                    </p>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-edit"></i>
+                        Manage Content
+                    </button>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon analytics">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Analytics</div>
+                            <div class="card-description">View platform analytics</div>
+                        </div>
+                    </div>
+                    <p>
+                        Analyze student performance, track engagement metrics, and generate
+                        reports.
+                    </p>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-chart-line"></i>
+                        View Analytics
+                    </button>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon settings">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Settings</div>
+                            <div class="card-description">Platform configuration</div>
+                        </div>
+                    </div>
+                    <p>
+                        Configure platform settings, manage user permissions, and system
+                        preferences.
+                    </p>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-wrench"></i>
+                        Open Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <section class="students-section" id="students-section">
+                <div class="section-header">
+                    <h2 class="section-title">Student Management</h2>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add New Student
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Email</th>
+                                <th>Grade</th>
+                                <th>Level</th>
+                                <th>Score</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Students will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentUserType = "student";
+        let studentsData = [];
+        let thoughtInterval;
+        let currentExam = null;
+        let currentQuestionIndex = 0;
+        let examAnswers = [];
+        let examStartTime = null;
+        let celebrationContainer = null;
+        let currentGame = null;
+        let gameScore = 0;
+        let gameTimer = null;
+        let timeLeft = 60;
+
+        // STEM Subjects data
+        const stemSubjects = {
+            math: {
+                name: "Mathematics",
+                icon: "fas fa-calculator",
+                color: "math",
+                lessons: [],
+            },
+            science: {
+                name: "Science",
+                icon: "fas fa-flask",
+                color: "science",
+                lessons: [],
+            },
+            technology: {
+                name: "Technology",
+                icon: "fas fa-laptop-code",
+                color: "technology",
+                lessons: [],
+            },
+            engineering: {
+                name: "Engineering",
+                icon: "fas fa-cogs",
+                color: "engineering",
+                lessons: [],
+            },
+        };
+
+        // Educational games data
+        const educationalGames = [
+            {
+                id: "math-memory",
+                title: "Math Memory",
+                description: "Match mathematical expressions with their solutions",
+                icon: "fas fa-brain",
+                subject: "math",
+                instructions: "Match each mathematical expression with its correct solution. Click on cards to flip them and find matching pairs."
+            },
+            {
+                id: "science-quiz",
+                title: "Science Quiz",
+                description: "Test your knowledge of scientific concepts",
+                icon: "fas fa-flask",
+                subject: "science",
+                instructions: "Answer multiple-choice questions about science. Select the correct answer from the options provided."
+            },
+            {
+                id: "code-challenge",
+                title: "Code Challenge",
+                description: "Solve programming puzzles and learn coding",
+                icon: "fas fa-code",
+                subject: "technology",
+                instructions: "Complete the code snippet by selecting the correct option. Pay attention to syntax and logic."
+            },
+            {
+                id: "engineering-puzzle",
+                title: "Engineering Puzzle",
+                description: "Solve engineering problems and build solutions",
+                icon: "fas fa-puzzle-piece",
+                subject: "engineering",
+                instructions: "Arrange the engineering components in the correct order to solve the problem."
+            },
+            {
+                id: "vocabulary-builder",
+                title: "Vocabulary Builder",
+                description: "Expand your vocabulary with fun word games",
+                icon: "fas fa-book",
+                subject: "language",
+                instructions: "Match words with their definitions to build your vocabulary."
+            },
+            {
+                id: "history-timeline",
+                title: "History Timeline",
+                description: "Place historical events in chronological order",
+                icon: "fas fa-history",
+                subject: "history",
+                instructions: "Drag and drop historical events into the correct chronological order."
+            }
+        ];
+
+        // Educational thoughts array
+        const educationalThoughts = [
+            "Education is the most powerful weapon which you can use to change the world. - Nelson Mandela",
+            "The beautiful thing about learning is that no one can take it away from you. - B.B. King",
+            "Education is not preparation for life; education is life itself. - John Dewey",
+            "The more that you read, the more things you will know. The more that you learn, the more places you'll go. - Dr. Seuss",
+            "Learning never exhausts the mind. - Leonardo da Vinci",
+            "Education is the passport to the future, for tomorrow belongs to those who prepare for it today. - Malcolm X",
+            "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice. - Brian Herbert",
+        ];
+
+        // Initialize the platform
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if user is already logged in
+            const authToken = localStorage.getItem("authToken");
+            if (authToken) {
+                currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
+                if (currentUser.userType === "admin") {
+                    showAdminDashboard();
+                } else {
+                    showStudentDashboard();
+                }
+            } else {
+                showLandingPage();
+            }
+
+            // Set up user type selection
+            setupUserTypeSelection();
+
+            // Start educational thoughts cycling
+            startEducationalThoughts();
+
+            // Initialize exam system
+            initExamSystem();
+
+            // Set up form event listeners
+            document.getElementById("loginForm").addEventListener("submit", handleLogin);
+            document.getElementById("registerForm").addEventListener("submit", handleRegister);
+        });
+
+        // Page navigation functions
+        function showLandingPage() {
+            document.getElementById("landing-page").style.display = "flex";
+            document.getElementById("student-dashboard").style.display = "none";
+            document.getElementById("admin-dashboard").style.display = "none";
+        }
+
+        function showStudentDashboard() {
+            document.getElementById("landing-page").style.display = "none";
+            document.getElementById("student-dashboard").style.display = "flex";
+            document.getElementById("admin-dashboard").style.display = "none";
+            
+            // Update UI with user data
+            updateStudentInterface();
+            
+            // Generate lessons based on grade
+            generateLessonsForGrade(currentUser.grade);
+            
+            // Load subjects and games
+            loadSubjects();
+            loadGames();
+        }
+
+        function showAdminDashboard() {
+            document.getElementById("landing-page").style.display = "none";
+            document.getElementById("student-dashboard").style.display = "none";
+            document.getElementById("admin-dashboard").style.display = "flex";
+            
+            // Update UI with user data
+            updateAdminInterface();
+            
+            // Load sample data
+            loadSampleData();
+            
+            // Load students table
+            loadStudentsTable();
+        }
+
+        // Educational thoughts functionality
+        function startEducationalThoughts() {
+            const thoughtsDisplay = document.getElementById("thoughtsDisplay");
+            let currentThoughtIndex = 0;
+
+            function updateThought() {
+                if (thoughtsDisplay) {
+                    thoughtsDisplay.innerHTML = `<p class="thought-text">${educationalThoughts[currentThoughtIndex]}</p>`;
+                    currentThoughtIndex = (currentThoughtIndex + 1) % educationalThoughts.length;
+                }
+            }
+
+            // Update immediately
+            updateThought();
+
+            // Update every 4 seconds
+            thoughtInterval = setInterval(updateThought, 4000);
+        }
+
+        // User type selection
+        function setupUserTypeSelection() {
+            const userTypeBtns = document.querySelectorAll(".user-type-btn");
+            const gradeGroup = document.getElementById("gradeGroup");
+
+            userTypeBtns.forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    // Remove active class from all buttons
+                    userTypeBtns.forEach((b) => b.classList.remove("active"));
+                    // Add active class to clicked button
+                    this.classList.add("active");
+                    // Update current user type
+                    currentUserType = this.dataset.type;
+
+                    // Show/hide grade selection based on user type
+                    if (currentUserType === "student") {
+                        gradeGroup.style.display = "flex";
+                        document.getElementById("registerGrade").required = true;
+                    } else {
+                        gradeGroup.style.display = "none";
+                        document.getElementById("registerGrade").required = false;
+                    }
+                });
+            });
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            const overlay = document.getElementById("modalOverlay");
+            const allModals = document.querySelectorAll(".modal");
+            const targetModal = document.getElementById(modalId);
+
+            // Hide all modals first
+            allModals.forEach((modal) => {
+                modal.style.display = "none";
+            });
+
+            // Show the overlay and target modal
+            overlay.style.display = "flex";
+            overlay.classList.add("active");
+            targetModal.style.display = "block";
+
+            // Reset forms
+            if (modalId === "loginModal") {
+                document.getElementById("loginForm").reset();
+            } else if (modalId === "registerModal") {
+                document.getElementById("registerForm").reset();
+                // Reset user type to student
+                currentUserType = "student";
+                document.querySelectorAll(".user-type-btn").forEach((btn) => {
+                    btn.classList.remove("active");
+                    if (btn.dataset.type === "student") {
+                        btn.classList.add("active");
+                    }
+                });
+                document.getElementById("gradeGroup").style.display = "flex";
+            }
+        }
+
+        function closeModal(modalId) {
+            const overlay = document.getElementById("modalOverlay");
+            const allModals = document.querySelectorAll(".modal");
+
+            overlay.classList.remove("active");
+            setTimeout(() => {
+                overlay.style.display = "none";
+                // Hide all modals
+                allModals.forEach((modal) => {
+                    modal.style.display = "none";
+                });
+            }, 300);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById("modalOverlay").addEventListener("click", function (e) {
+            if (e.target === this) {
+                // Close all modals
+                const overlay = document.getElementById("modalOverlay");
+                const allModals = document.querySelectorAll(".modal");
+
+                overlay.classList.remove("active");
+                setTimeout(() => {
+                    overlay.style.display = "none";
+                    allModals.forEach((modal) => {
+                        modal.style.display = "none";
+                    });
+                }, 300);
+            }
+        });
+
+        // Enhanced form handling
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            if (!email || !password) {
+                showNotification("Please fill in all fields", "error");
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            submitBtn.disabled = true;
+
+            // Simulate API call (replace with actual API call)
+            setTimeout(() => {
+                // For demo purposes, check if it's admin or student
+                if (email.includes("admin")) {
+                    // Simulate admin login
+                    currentUser = {
+                        id: 1,
+                        firstName: "Admin",
+                        lastName: "User",
+                        email: email,
+                        userType: "admin",
+                    };
+                    localStorage.setItem("authToken", "demo-admin-token");
+                    localStorage.setItem("userData", JSON.stringify(currentUser));
+                    showNotification("Login successful! Redirecting to admin dashboard...", "success");
+                    setTimeout(() => {
+                        showAdminDashboard();
+                    }, 1500);
+                } else {
+                    // Simulate student login
+                    currentUser = {
+                        id: 2,
+                        firstName: "Student",
+                        lastName: "User",
+                        email: email,
+                        userType: "student",
+                        grade: 8,
+                        currentLevel: 1,
+                        totalPoints: 0,
+                    };
+                    localStorage.setItem("authToken", "demo-student-token");
+                    localStorage.setItem("userData", JSON.stringify(currentUser));
+                    showNotification("Login successful! Redirecting to student dashboard...", "success");
+                    setTimeout(() => {
+                        showStudentDashboard();
+                    }, 1500);
+                }
+
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+
+            const formData = {
+                firstName: document.getElementById("registerFirstName").value,
+                lastName: document.getElementById("registerLastName").value,
+                email: document.getElementById("registerEmail").value,
+                grade: document.getElementById("registerGrade").value,
+                password: document.getElementById("registerPassword").value,
+                confirmPassword: document.getElementById("registerConfirmPassword").value,
+                userType: currentUserType,
+            };
+
+            // Validate form
+            if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+                showNotification("Please fill in all required fields", "error");
+                return;
+            }
+
+            if (formData.userType === "student" && !formData.grade) {
+                showNotification("Please select your grade level", "error");
+                return;
+            }
+
+            if (formData.password !== formData.confirmPassword) {
+                showNotification("Passwords do not match", "error");
+                return;
+            }
+
+            if (formData.password.length < 6) {
+                showNotification("Password must be at least 6 characters", "error");
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            submitBtn.disabled = true;
+
+            // Simulate API call (replace with actual API call)
+            setTimeout(() => {
+                currentUser = {
+                    id: Date.now(),
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    userType: formData.userType,
+                    grade: formData.grade || null,
+                    currentLevel: 1,
+                    totalPoints: 0,
+                };
+
+                localStorage.setItem("authToken", "demo-token-" + Date.now());
+                localStorage.setItem("userData", JSON.stringify(currentUser));
+
+                showNotification("Registration successful! Redirecting to dashboard...", "success");
+
+                setTimeout(() => {
+                    if (formData.userType === "admin") {
+                        showAdminDashboard();
+                    } else {
+                        showStudentDashboard();
+                    }
+                }, 1500);
+
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        }
+
+        // Notification system
+        function showNotification(message, type = "info") {
+            const notification = document.createElement("div");
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add("show");
+            }, 100);
+
+            // Hide notification after 4 seconds
+            setTimeout(() => {
+                notification.classList.remove("show");
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Student Dashboard Functions
+        function updateStudentInterface() {
+            document.getElementById("userName").textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            document.getElementById("userGrade").textContent = `Grade ${currentUser.grade} • Level ${currentUser.currentLevel || 1}`;
+            document.getElementById("welcomeName").textContent = currentUser.firstName;
+            document.getElementById("userAvatar").textContent = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+            document.getElementById("totalPoints").textContent = currentUser.totalPoints || 0;
+            document.getElementById("currentLevel").textContent = currentUser.currentLevel || 1;
+            document.getElementById("completedLessons").textContent = currentUser.completedLessons || 0;
+        }
+
+        function generateLessonsForGrade(grade) {
+            const gradeNum = parseInt(grade);
+            const lessonCount = gradeNum < 8 ? 5 : 6;
+            const examDifficulty = gradeNum < 8 ? "easy" : "moderate";
+
+            Object.keys(stemSubjects).forEach((subjectKey) => {
+                const subject = stemSubjects[subjectKey];
+                subject.lessons = [];
+
+                for (let i = 1; i <= lessonCount; i++) {
+                    subject.lessons.push({
+                        id: `${subjectKey}_lesson_${i}`,
+                        title: `${subject.name} Lesson ${i}`,
+                        description: `Learn fundamental concepts of ${subject.name.toLowerCase()}`,
+                        completed: false,
+                        examDifficulty: examDifficulty,
+                        examCompleted: false,
+                    });
+                }
+            });
+        }
+
+        function loadSubjects() {
+            const subjectsGrid = document.getElementById("subjectsGrid");
+            subjectsGrid.innerHTML = "";
+
+            Object.keys(stemSubjects).forEach((subjectKey) => {
+                const subject = stemSubjects[subjectKey];
+                const completedLessons = subject.lessons.filter((lesson) => lesson.completed).length;
+                const totalLessons = subject.lessons.length;
+                const progressPercentage = (completedLessons / totalLessons) * 100;
+
+                const subjectCard = document.createElement("div");
+                subjectCard.className = "subject-card";
+                subjectCard.innerHTML = `
+                    <div class="subject-header">
+                        <div class="subject-icon ${subject.color}">
+                            <i class="${subject.icon}"></i>
+                        </div>
+                        <div class="subject-info">
+                            <h3>${subject.name}</h3>
+                            <p>${totalLessons} lessons • ${completedLessons} completed</p>
+                        </div>
+                    </div>
+                    <div class="subject-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Progress</span>
+                            <span>${Math.round(progressPercentage)}%</span>
+                        </div>
+                    </div>
+                    <div class="lessons-list" id="lessons_${subjectKey}">
+                        ${subject.lessons.map((lesson) => `
+                            <div class="lesson-item ${lesson.completed ? "completed" : lesson.id === getCurrentLessonId(subjectKey) ? "current" : ""}">
+                                <div class="lesson-icon ${lesson.completed ? "completed" : lesson.id === getCurrentLessonId(subjectKey) ? "current" : "locked"}">
+                                    <i class="fas ${lesson.completed ? "fa-check" : lesson.id === getCurrentLessonId(subjectKey) ? "fa-play" : "fa-lock"}"></i>
+                                </div>
+                                <div class="lesson-info">
+                                    <div class="lesson-title">${lesson.title}</div>
+                                    <div class="lesson-desc">${lesson.description}</div>
+                                </div>
+                                <button class="lesson-action ${lesson.completed ? "exam" : "start"}" 
+                                        onclick="${lesson.completed ? `startExam('${subjectKey}', '${lesson.id}')` : `startLesson('${subjectKey}', '${lesson.id}')`}"
+                                        ${!lesson.completed && lesson.id !== getCurrentLessonId(subjectKey) ? "disabled" : ""}>
+                                    ${lesson.completed ? "Take Exam" : "Start Lesson"}
+                                </button>
+                            </div>
+                        `).join("")}
+                    </div>
+                `;
+                subjectsGrid.appendChild(subjectCard);
+            });
+        }
+
+        function loadGames() {
+            const gamesGrid = document.getElementById("gamesGrid");
+            gamesGrid.innerHTML = "";
+
+            educationalGames.forEach((game) => {
+                const gameCard = document.createElement("div");
+                gameCard.className = "game-card";
+                gameCard.innerHTML = `
+                    <div class="game-icon">
+                        <i class="${game.icon}"></i>
+                    </div>
+                    <h3 class="game-title">${game.title}</h3>
+                    <p class="game-description">${game.description}</p>
+                    <button class="btn btn-primary" onclick="startGame('${game.id}')">
+                        <i class="fas fa-play"></i>
+                        Play Now
+                    </button>
+                `;
+                gamesGrid.appendChild(gameCard);
+            });
+        }
+
+        function getCurrentLessonId(subjectKey) {
+            const subject = stemSubjects[subjectKey];
+            const firstIncompleteLesson = subject.lessons.find((lesson) => !lesson.completed);
+            return firstIncompleteLesson ? firstIncompleteLesson.id : null;
+        }
+
+        function startLesson(subjectKey, lessonId) {
+            // Simulate lesson completion
+            const subject = stemSubjects[subjectKey];
+            const lesson = subject.lessons.find((l) => l.id === lessonId);
+
+            if (lesson) {
+                lesson.completed = true;
+                currentUser.completedLessons = (currentUser.completedLessons || 0) + 1;
+                currentUser.totalPoints = (currentUser.totalPoints || 0) + 10;
+
+                // Update localStorage
+                localStorage.setItem("userData", JSON.stringify(currentUser));
+
+                // Update UI
+                updateStudentInterface();
+                loadSubjects();
+
+                showNotification("Lesson completed! You earned 10 points!", "success");
+            }
+        }
+
+        // Game Functions
+        function startGame(gameId) {
+            currentGame = educationalGames.find(game => game.id === gameId);
+            if (!currentGame) return;
+
+            // Hide subjects and show game container
+            document.getElementById("subjectsGrid").style.display = "none";
+            document.getElementById("gamesGrid").style.display = "none";
+            document.getElementById("gameContainer").style.display = "flex";
+
+            // Set game title and instructions
+            document.getElementById("gameTitle").textContent = currentGame.title;
+            document.getElementById("gameInstructions").textContent = currentGame.instructions;
+            document.getElementById("gameScore").textContent = "Score: 0";
+            
+            // Reset game state
+            gameScore = 0;
+            timeLeft = 60;
+            document.getElementById("gameTimer").textContent = `Time: ${timeLeft}s`;
+            
+            // Start timer
+            startGameTimer();
+            
+            // Load game content based on game type
+            loadGameContent();
+        }
+
+        function loadGameContent() {
+            const gameContent = document.getElementById("gameContent");
+            gameContent.innerHTML = "";
+
+            switch (currentGame.id) {
+                case "math-memory":
+                    loadMathMemoryGame();
+                    break;
+                case "science-quiz":
+                    loadScienceQuizGame();
+                    break;
+                case "code-challenge":
+                    loadCodeChallengeGame();
+                    break;
+                case "engineering-puzzle":
+                    loadEngineeringPuzzleGame();
+                    break;
+                case "vocabulary-builder":
+                    loadVocabularyBuilderGame();
+                    break;
+                case "history-timeline":
+                    loadHistoryTimelineGame();
+                    break;
+            }
+        }
+
+        function loadMathMemoryGame() {
+            const gameContent = document.getElementById("gameContent");
+            
+            // Math memory game data
+            const mathPairs = [
+                { expression: "5 + 3", answer: "8" },
+                { expression: "10 - 4", answer: "6" },
+                { expression: "2 × 3", answer: "6" },
+                { expression: "12 ÷ 3", answer: "4" },
+                { expression: "7 + 6", answer: "13" },
+                { expression: "15 - 7", answer: "8" }
+            ];
+            
+            // Create cards array with expressions and answers
+            let cards = [];
+            mathPairs.forEach(pair => {
+                cards.push({ type: "expression", value: pair.expression, match: pair.answer });
+                cards.push({ type: "answer", value: pair.answer, match: pair.expression });
+            });
+            
+            // Shuffle cards
+            cards = cards.sort(() => Math.random() - 0.5);
+            
+            // Create game board
+            const gameBoard = document.createElement("div");
+            gameBoard.className = "math-game-board";
+            
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement("div");
+                cardElement.className = "math-card";
+                cardElement.dataset.index = index;
+                cardElement.dataset.value = card.value;
+                cardElement.dataset.match = card.match;
+                cardElement.dataset.type = card.type;
+                cardElement.textContent = "?";
+                
+                cardElement.addEventListener("click", () => handleMathCardClick(cardElement));
+                gameBoard.appendChild(cardElement);
+            });
+            
+            gameContent.appendChild(gameBoard);
+        }
+
+        function handleMathCardClick(cardElement) {
+            if (cardElement.classList.contains("selected") || cardElement.classList.contains("matched")) {
+                return;
+            }
+            
+            // Show card value
+            cardElement.textContent = cardElement.dataset.value;
+            cardElement.classList.add("selected");
+            
+            // Check for matches
+            const selectedCards = document.querySelectorAll(".math-card.selected");
+            if (selectedCards.length === 2) {
+                const card1 = selectedCards[0];
+                const card2 = selectedCards[1];
+                
+                if ((card1.dataset.value === card2.dataset.match && card2.dataset.value === card1.dataset.match) ||
+                    (card1.dataset.match === card2.dataset.value && card2.dataset.match === card1.dataset.value)) {
+                    // Match found
+                    card1.classList.add("matched");
+                    card2.classList.add("matched");
+                    card1.classList.remove("selected");
+                    card2.classList.remove("selected");
+                    
+                    // Update score
+                    gameScore += 10;
+                    document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+                    
+                    // Check if all pairs are matched
+                    const allMatched = document.querySelectorAll(".math-card.matched").length === document.querySelectorAll(".math-card").length;
+                    if (allMatched) {
+                        endGame(true);
+                    }
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        card1.textContent = "?";
+                        card2.textContent = "?";
+                        card1.classList.remove("selected");
+                        card2.classList.remove("selected");
+                    }, 1000);
+                }
+            }
+        }
+
+        function loadScienceQuizGame() {
+            const gameContent = document.getElementById("gameContent");
+            
+            // Science quiz questions
+            const scienceQuestions = [
+                {
+                    question: "What is the chemical symbol for water?",
+                    options: ["H2O", "CO2", "O2", "H2"],
+                    correct: 0
+                },
+                {
+                    question: "What planet is closest to the Sun?",
+                    options: ["Venus", "Earth", "Mercury", "Mars"],
+                    correct: 2
+                },
+                {
+                    question: "What gas do plants produce during photosynthesis?",
+                    options: ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+                    correct: 1
+                }
+            ];
+            
+            let currentQuestionIndex = 0;
+            
+            function displayQuestion() {
+                if (currentQuestionIndex >= scienceQuestions.length) {
+                    endGame(true);
+                    return;
+                }
+                
+                const question = scienceQuestions[currentQuestionIndex];
+                
+                const quizContainer = document.createElement("div");
+                quizContainer.className = "science-quiz-container";
+                quizContainer.innerHTML = `
+                    <div class="science-quiz-question">${question.question}</div>
+                    <div class="science-quiz-options">
+                        ${question.options.map((option, index) => `
+                            <div class="science-quiz-option" data-index="${index}">${option}</div>
+                        `).join("")}
+                    </div>
+                `;
+                
+                gameContent.innerHTML = "";
+                gameContent.appendChild(quizContainer);
+                
+                // Add event listeners to options
+                document.querySelectorAll(".science-quiz-option").forEach(option => {
+                    option.addEventListener("click", () => {
+                        const selectedIndex = parseInt(option.dataset.index);
+                        if (selectedIndex === question.correct) {
+                            // Correct answer
+                            option.classList.add("selected");
+                            gameScore += 10;
+                            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+                            
+                            setTimeout(() => {
+                                currentQuestionIndex++;
+                                displayQuestion();
+                            }, 1000);
+                        } else {
+                            // Incorrect answer
+                            option.classList.add("selected");
+                            setTimeout(() => {
+                                option.classList.remove("selected");
+                            }, 1000);
+                        }
+                    });
+                });
+            }
+            
+            displayQuestion();
+        }
+
+        function loadCodeChallengeGame() {
+            const gameContent = document.getElementById("gameContent");
+            
+            // Code challenge questions
+            const codeChallenges = [
+                {
+                    code: "function add(a, b) {\n  return a + b;\n}",
+                    question: "What does this function do?",
+                    options: ["Subtracts two numbers", "Adds two numbers", "Multiplies two numbers", "Divides two numbers"],
+                    correct: 1
+                },
+                {
+                    code: "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}",
+                    question: "What will this loop output?",
+                    options: ["0, 1, 2, 3, 4", "1, 2, 3, 4, 5", "0, 1, 2, 3, 4, 5", "1, 2, 3, 4"],
+                    correct: 0
+                }
+            ];
+            
+            let currentChallengeIndex = 0;
+            
+            function displayChallenge() {
+                if (currentChallengeIndex >= codeChallenges.length) {
+                    endGame(true);
+                    return;
+                }
+                
+                const challenge = codeChallenges[currentChallengeIndex];
+                
+                const challengeContainer = document.createElement("div");
+                challengeContainer.className = "tech-game-container";
+                challengeContainer.innerHTML = `
+                    <div class="tech-game-code">${challenge.code}</div>
+                    <div class="science-quiz-question">${challenge.question}</div>
+                    <div class="tech-game-options">
+                        ${challenge.options.map((option, index) => `
+                            <div class="tech-game-option" data-index="${index}">${option}</div>
+                        `).join("")}
+                    </div>
+                `;
+                
+                gameContent.innerHTML = "";
+                gameContent.appendChild(challengeContainer);
+                
+                // Add event listeners to options
+                document.querySelectorAll(".tech-game-option").forEach(option => {
+                    option.addEventListener("click", () => {
+                        const selectedIndex = parseInt(option.dataset.index);
+                        if (selectedIndex === challenge.correct) {
+                            // Correct answer
+                            option.classList.add("correct");
+                            gameScore += 10;
+                            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+                            
+                            setTimeout(() => {
+                                currentChallengeIndex++;
+                                displayChallenge();
+                            }, 1000);
+                        } else {
+                            // Incorrect answer
+                            option.classList.add("incorrect");
+                            setTimeout(() => {
+                                option.classList.remove("incorrect");
+                            }, 1000);
+                        }
+                    });
+                });
+            }
+            
+            displayChallenge();
+        }
+
+        function loadEngineeringPuzzleGame() {
+            const gameContent = document.getElementById("gameContent");
+            
+            // Engineering puzzle
+            const puzzleContainer = document.createElement("div");
+            puzzleContainer.className = "engineering-game-container";
+            puzzleContainer.innerHTML = `
+                <div class="engineering-game-problem">
+                    <h3>Build a Simple Bridge</h3>
+                    <p>Arrange the components in the correct order to build a stable bridge:</p>
+                </div>
+                <div class="engineering-game-solution">
+                    <div class="engineering-game-piece" data-order="1">Foundation</div>
+                    <div class="engineering-game-piece" data-order="3">Road Surface</div>
+                    <div class="engineering-game-piece" data-order="2">Support Beams</div>
+                </div>
+                <div class="engineering-game-solution" id="puzzleSolution" style="margin-top: 1rem; min-height: 100px; border: 1px dashed var(--border-color); border-radius: 8px; padding: 1rem;"></div>
+            `;
+            
+            gameContent.innerHTML = "";
+            gameContent.appendChild(puzzleContainer);
+            
+            let selectedPieces = [];
+            
+            // Add event listeners to pieces
+            document.querySelectorAll(".engineering-game-piece").forEach(piece => {
+                piece.addEventListener("click", () => {
+                    if (!piece.classList.contains("selected")) {
+                        piece.classList.add("selected");
+                        selectedPieces.push(piece);
+                        
+                        // Update solution area
+                        const solutionArea = document.getElementById("puzzleSolution");
+                        solutionArea.innerHTML = selectedPieces.map(p => p.textContent).join(" → ");
+                        
+                        // Check if puzzle is complete
+                        if (selectedPieces.length === 3) {
+                            const correctOrder = selectedPieces.every((piece, index) => 
+                                parseInt(piece.dataset.order) === index + 1
+                            );
+                            
+                            if (correctOrder) {
+                                gameScore += 30;
+                                document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+                                setTimeout(() => endGame(true), 1000);
+                            } else {
+                                setTimeout(() => {
+                                    selectedPieces.forEach(p => p.classList.remove("selected"));
+                                    selectedPieces = [];
+                                    solutionArea.innerHTML = "";
+                                }, 1000);
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function loadVocabularyBuilderGame() {
+            const gameContent = document.getElementById("gameContent");
+            
+            // Vocabulary pairs
+            const vocabularyPairs = [
+                { word: "Benevolent", definition: "Well-meaning and kindly" },
+                { word: "Ephemeral", definition: "Lasting for a very short time" },
+                { word: "Meticulous", definition: "Showing great attention to detail" },
+                { word: "Pragmatic", definition: "Dealing with things sensibly and realistically" }
+            ];
+            
+            // Create cards array with words and definitions
+            let cards = [];
+            vocabularyPairs.forEach(pair => {
+                cards.push({ type: "word", value: pair.word, match: pair.definition });
+                cards.push({ type: "definition", value: pair.definition, match: pair.word });
+            });
+            
+            // Shuffle cards
+            cards = cards.sort(() => Math.random() - 0.5);
+            
+            // Create game board
+            const gameBoard = document.createElement("div");
+            gameBoard.className = "math-game-board";
+            
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement("div");
+                cardElement.className = "math-card";
+                cardElement.dataset.index = index;
+                cardElement.dataset.value = card.value;
+                cardElement.dataset.match = card.match;
+                cardElement.dataset.type = card.type;
+                cardElement.textContent = "?";
+                
+                cardElement.addEventListener("click", () => handleVocabularyCardClick(cardElement));
+                gameBoard.appendChild(cardElement);
+            });
+            
+            gameContent.appendChild(gameBoard);
+        }
+
+        function handleVocabularyCardClick(cardElement) {
+            if (cardElement.classList.contains("selected") || cardElement.classList.contains("matched")) {
+                return;
+            }
+            
+            // Show card value
+            cardElement.textContent = cardElement.dataset.value;
+            cardElement.classList.add("selected");
+            
+            // Check for matches
+            const selectedCards = document.querySelectorAll(".math-card.selected");
+            if (selectedCards.length === 2) {
+                const card1 = selectedCards[0];
+                const card2 = selectedCards[1];
+                
+                if ((card1.dataset.value === card2.dataset.match && card2.dataset.value === card1.dataset.match) ||
+                    (card1.dataset.match === card2.dataset.value && card2.dataset.match === card1.dataset.value)) {
+                    // Match found
+                    card1.classList.add("matched");
+                    card2.classList.add("matched");
+                    card1.classList.remove("selected");
+                    card2.classList.remove("selected");
+                    
+                    // Update score
+                    gameScore += 10;
+                    document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+                    
+                    // Check if all pairs are matched
+                    const allMatched = document.querySelectorAll(".math-card.matched").length === document.querySelectorAll(".math-card").length;
+                    if (allMatched) {
+                        endGame(true);
+                    }
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        card1.textContent = "?";
+                        card2.textContent = "?";
+                        card1.classList.remove("selected");
+                        card2.classList.remove("selected");
+                    }, 1000);
+                }
+            }
+        }
+
+        function loadHistoryTimelineGame() {
+            const gameContent = document.getElementById("gameContent");
+            
+            // Historical events
+            const historicalEvents = [
+                { event: "Declaration of Independence", year: 1776 },
+                { event: "World War II Ends", year: 1945 },
+                { event: "First Moon Landing", year: 1969 },
+                { event: "Fall of Berlin Wall", year: 1989 }
+            ];
+            
+            // Shuffle events
+            const shuffledEvents = [...historicalEvents].sort(() => Math.random() - 0.5);
+            
+            const timelineContainer = document.createElement("div");
+            timelineContainer.className = "engineering-game-container";
+            timelineContainer.innerHTML = `
+                <div class="engineering-game-problem">
+                    <h3>Historical Timeline</h3>
+                    <p>Drag and drop the events into the correct chronological order:</p>
+                </div>
+                <div class="engineering-game-solution" id="timelineSolution" style="margin-top: 1rem; min-height: 200px; border: 1px dashed var(--border-color); border-radius: 8px; padding: 1rem;"></div>
+                <div class="engineering-game-solution" style="margin-top: 1rem;">
+                    ${shuffledEvents.map(event => `
+                        <div class="engineering-game-piece" data-year="${event.year}">${event.event}</div>
+                    `).join("")}
+                </div>
+            `;
+            
+            gameContent.innerHTML = "";
+            gameContent.appendChild(timelineContainer);
+            
+            let selectedEvents = [];
+            
+            // Add event listeners to events
+            document.querySelectorAll(".engineering-game-piece").forEach(event => {
+                event.addEventListener("click", () => {
+                    if (!event.classList.contains("selected")) {
+                        event.classList.add("selected");
+                        selectedEvents.push(event);
+                        
+                        // Update timeline area
+                        const timelineArea = document.getElementById("timelineSolution");
+                        timelineArea.innerHTML = selectedEvents.map(e => e.textContent).join(" → ");
+                        
+                        // Check if timeline is complete
+                        if (selectedEvents.length === historicalEvents.length) {
+                            const correctOrder = selectedEvents.every((event, index, array) => {
+                                if (index === 0) return true;
+                                return parseInt(event.dataset.year) >= parseInt(array[index - 1].dataset.year);
+                            });
+                            
+                            if (correctOrder) {
+                                gameScore += 30;
+                                document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+                                setTimeout(() => endGame(true), 1000);
+                            } else {
+                                setTimeout(() => {
+                                    selectedEvents.forEach(e => e.classList.remove("selected"));
+                                    selectedEvents = [];
+                                    timelineArea.innerHTML = "";
+                                }, 1000);
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function startGameTimer() {
+            clearInterval(gameTimer);
+            timeLeft = 60;
+            document.getElementById("gameTimer").textContent = `Time: ${timeLeft}s`;
+            
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("gameTimer").textContent = `Time: ${timeLeft}s`;
+                
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function endGame(success) {
+            clearInterval(gameTimer);
+            
+            if (success) {
+                showNotification(`Game completed! Final score: ${gameScore}`, "success");
+                // Award points based on score
+                const pointsEarned = Math.floor(gameScore / 10) * 5;
+                currentUser.totalPoints = (currentUser.totalPoints || 0) + pointsEarned;
+                localStorage.setItem("userData", JSON.stringify(currentUser));
+                updateStudentInterface();
+            } else {
+                showNotification("Time's up! Try again.", "error");
+            }
+            
+            // Show next level button or exit button
+            document.getElementById("gameNextBtn").style.display = success ? "inline-flex" : "none";
+        }
+
+        function nextGameLevel() {
+            // For simplicity, we'll just restart the same game
+            startGame(currentGame.id);
+        }
+
+        function exitGame() {
+            clearInterval(gameTimer);
+            document.getElementById("gameContainer").style.display = "none";
+            document.getElementById("subjectsGrid").style.display = "grid";
+            document.getElementById("gamesGrid").style.display = "grid";
+        }
+
+        // Exam System Functions
+        function initExamSystem() {
+            celebrationContainer = document.getElementById('celebration');
+        }
+
+        function startExam(subjectKey, lessonId) {
+            const subject = stemSubjects[subjectKey];
+            const lesson = subject.lessons.find(l => l.id === lessonId);
+            
+            if (!lesson) return;
+
+            currentExam = {
+                subjectKey,
+                lessonId,
+                difficulty: lesson.examDifficulty,
+                questions: generateExamQuestions(subjectKey, lesson.examDifficulty),
+                subjectName: subject.name
+            };
+            
+            currentQuestionIndex = 0;
+            examAnswers = [];
+            examStartTime = Date.now();
+            
+            showExamModal();
+        }
+
+        function generateExamQuestions(subjectKey, difficulty) {
+            const questions = [];
+            const questionCount = difficulty === 'easy' ? 5 : 8;
+            
+            // Question templates for different subjects
+            const questionTemplates = {
+                math: {
+                    easy: [
+                        {
+                            question: "What is 5 + 3?",
+                            options: ["6", "7", "8", "9"],
+                            correct: 2,
+                            explanation: "5 + 3 = 8"
+                        },
+                        {
+                            question: "What is 10 - 4?",
+                            options: ["5", "6", "7", "8"],
+                            correct: 1,
+                            explanation: "10 - 4 = 6"
+                        },
+                        {
+                            question: "What is 2 × 3?",
+                            options: ["5", "6", "7", "8"],
+                            correct: 1,
+                            explanation: "2 × 3 = 6"
+                        },
+                        {
+                            question: "What is 12 ÷ 3?",
+                            options: ["3", "4", "5", "6"],
+                            correct: 1,
+                            explanation: "12 ÷ 3 = 4"
+                        },
+                        {
+                            question: "What is 7 + 6?",
+                            options: ["12", "13", "14", "15"],
+                            correct: 1,
+                            explanation: "7 + 6 = 13"
+                        }
+                    ],
+                    moderate: [
+                        {
+                            question: "What is 15% of 200?",
+                            options: ["25", "30", "35", "40"],
+                            correct: 1,
+                            explanation: "15% of 200 = 0.15 × 200 = 30"
+                        },
+                        {
+                            question: "Solve for x: 2x + 5 = 13",
+                            options: ["3", "4", "5", "6"],
+                            correct: 1,
+                            explanation: "2x + 5 = 13, so 2x = 8, therefore x = 4"
+                        },
+                        {
+                            question: "What is the area of a rectangle with length 8 and width 5?",
+                            options: ["35", "40", "45", "50"],
+                            correct: 1,
+                            explanation: "Area = length × width = 8 × 5 = 40"
+                        },
+                        {
+                            question: "What is √64?",
+                            options: ["6", "7", "8", "9"],
+                            correct: 2,
+                            explanation: "√64 = 8 because 8² = 64"
+                        },
+                        {
+                            question: "What is 3² + 4²?",
+                            options: ["20", "25", "30", "35"],
+                            correct: 1,
+                            explanation: "3² + 4² = 9 + 16 = 25"
+                        },
+                        {
+                            question: "What is the perimeter of a square with side length 6?",
+                            options: ["20", "24", "28", "32"],
+                            correct: 1,
+                            explanation: "Perimeter = 4 × side = 4 × 6 = 24"
+                        },
+                        {
+                            question: "What is 0.5 × 0.4?",
+                            options: ["0.1", "0.2", "0.3", "0.4"],
+                            correct: 1,
+                            explanation: "0.5 × 0.4 = 0.2"
+                        },
+                        {
+                            question: "What is 2³?",
+                            options: ["6", "8", "10", "12"],
+                            correct: 1,
+                            explanation: "2³ = 2 × 2 × 2 = 8"
+                        }
+                    ]
+                },
+                science: {
+                    easy: [
+                        {
+                            question: "What is the chemical symbol for water?",
+                            options: ["H2O", "CO2", "O2", "H2"],
+                            correct: 0,
+                            explanation: "Water is H2O - two hydrogen atoms and one oxygen atom"
+                        },
+                        {
+                            question: "What planet is closest to the Sun?",
+                            options: ["Venus", "Earth", "Mercury", "Mars"],
+                            correct: 2,
+                            explanation: "Mercury is the closest planet to the Sun"
+                        },
+                        {
+                            question: "What gas do plants produce during photosynthesis?",
+                            options: ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+                            correct: 1,
+                            explanation: "Plants produce oxygen during photosynthesis"
+                        },
+                        {
+                            question: "What is the largest organ in the human body?",
+                            options: ["Liver", "Heart", "Skin", "Brain"],
+                            correct: 2,
+                            explanation: "The skin is the largest organ in the human body"
+                        },
+                        {
+                            question: "What is the freezing point of water in Celsius?",
+                            options: ["-1°C", "0°C", "1°C", "2°C"],
+                            correct: 1,
+                            explanation: "Water freezes at 0°C"
+                        }
+                    ],
+                    moderate: [
+                        {
+                            question: "What is the process by which plants make their own food?",
+                            options: ["Respiration", "Photosynthesis", "Digestion", "Fermentation"],
+                            correct: 1,
+                            explanation: "Photosynthesis is how plants convert sunlight into energy"
+                        },
+                        {
+                            question: "What is the speed of light in a vacuum?",
+                            options: ["299,792,458 m/s", "300,000,000 m/s", "299,000,000 m/s", "301,000,000 m/s"],
+                            correct: 0,
+                            explanation: "The speed of light in a vacuum is exactly 299,792,458 m/s"
+                        },
+                        {
+                            question: "What is the chemical symbol for gold?",
+                            options: ["Go", "Gd", "Au", "Ag"],
+                            correct: 2,
+                            explanation: "Au is the chemical symbol for gold (from Latin 'aurum')"
+                        },
+                        {
+                            question: "What type of energy is stored in a battery?",
+                            options: ["Kinetic", "Potential", "Thermal", "Sound"],
+                            correct: 1,
+                            explanation: "Batteries store chemical potential energy"
+                        },
+                        {
+                            question: "What is the pH of pure water?",
+                            options: ["6", "7", "8", "9"],
+                            correct: 1,
+                            explanation: "Pure water has a pH of 7, which is neutral"
+                        },
+                        {
+                            question: "What is the unit of electrical resistance?",
+                            options: ["Volt", "Ampere", "Ohm", "Watt"],
+                            correct: 2,
+                            explanation: "The unit of electrical resistance is the Ohm (Ω)"
+                        },
+                        {
+                            question: "What is the most abundant gas in Earth's atmosphere?",
+                            options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Argon"],
+                            correct: 2,
+                            explanation: "Nitrogen makes up about 78% of Earth's atmosphere"
+                        },
+                        {
+                            question: "What is the process of a liquid turning into a gas?",
+                            options: ["Condensation", "Evaporation", "Sublimation", "Deposition"],
+                            correct: 1,
+                            explanation: "Evaporation is the process of a liquid turning into a gas"
+                        }
+                    ]
+                },
+                technology: {
+                    easy: [
+                        {
+                            question: "What does CPU stand for?",
+                            options: ["Central Processing Unit", "Computer Processing Unit", "Central Program Unit", "Computer Program Unit"],
+                            correct: 0,
+                            explanation: "CPU stands for Central Processing Unit"
+                        },
+                        {
+                            question: "What is the main function of RAM?",
+                            options: ["Long-term storage", "Temporary storage", "Processing", "Display"],
+                            correct: 1,
+                            explanation: "RAM provides temporary storage for data being processed"
+                        },
+                        {
+                            question: "What does HTML stand for?",
+                            options: ["HyperText Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlink Text Markup Language"],
+                            correct: 0,
+                            explanation: "HTML stands for HyperText Markup Language"
+                        },
+                        {
+                            question: "What is a computer virus?",
+                            options: ["A helpful program", "A harmful program", "A type of hardware", "A type of network"],
+                            correct: 1,
+                            explanation: "A computer virus is a harmful program that can damage your computer"
+                        },
+                        {
+                            question: "What does URL stand for?",
+                            options: ["Uniform Resource Locator", "Universal Resource Link", "Uniform Resource Link", "Universal Resource Locator"],
+                            correct: 0,
+                            explanation: "URL stands for Uniform Resource Locator"
+                        }
+                    ],
+                    moderate: [
+                        {
+                            question: "What is the difference between HTTP and HTTPS?",
+                            options: ["No difference", "HTTPS is more secure", "HTTP is faster", "HTTPS is older"],
+                            correct: 1,
+                            explanation: "HTTPS includes SSL/TLS encryption, making it more secure than HTTP"
+                        },
+                        {
+                            question: "What is the purpose of a firewall?",
+                            options: ["To speed up internet", "To block unauthorized access", "To store files", "To display websites"],
+                            correct: 1,
+                            explanation: "A firewall blocks unauthorized access to your network"
+                        },
+                        {
+                            question: "What is cloud computing?",
+                            options: ["Computing in the sky", "Using remote servers", "Using only local storage", "A type of hardware"],
+                            correct: 1,
+                            explanation: "Cloud computing uses remote servers to store and process data"
+                        },
+                        {
+                            question: "What is the difference between software and hardware?",
+                            options: ["No difference", "Software is physical, hardware is not", "Hardware is physical, software is not", "Both are the same"],
+                            correct: 2,
+                            explanation: "Hardware is physical components, software is programs and data"
+                        },
+                        {
+                            question: "What is an algorithm?",
+                            options: ["A type of computer", "A step-by-step procedure", "A programming language", "A type of file"],
+                            correct: 1,
+                            explanation: "An algorithm is a step-by-step procedure for solving a problem"
+                        },
+                        {
+                            question: "What is the purpose of a database?",
+                            options: ["To display websites", "To store and organize data", "To process images", "To connect to internet"],
+                            correct: 1,
+                            explanation: "A database stores and organizes data for easy retrieval"
+                        },
+                        {
+                            question: "What is machine learning?",
+                            options: ["Learning about machines", "Computers learning from data", "Building machines", "Repairing machines"],
+                            correct: 1,
+                            explanation: "Machine learning is when computers learn patterns from data"
+                        },
+                        {
+                            question: "What is the Internet of Things (IoT)?",
+                            options: ["Internet for computers only", "Connected everyday devices", "A type of website", "A programming language"],
+                            correct: 1,
+                            explanation: "IoT refers to everyday devices connected to the internet"
+                        }
+                    ]
+                },
+                engineering: {
+                    easy: [
+                        {
+                            question: "What is the purpose of a lever?",
+                            options: ["To store energy", "To multiply force", "To create heat", "To measure distance"],
+                            correct: 1,
+                            explanation: "A lever multiplies force to make work easier"
+                        },
+                        {
+                            question: "What is the strongest shape in engineering?",
+                            options: ["Circle", "Square", "Triangle", "Rectangle"],
+                            correct: 2,
+                            explanation: "Triangles are the strongest shape because they distribute force evenly"
+                        },
+                        {
+                            question: "What does CAD stand for?",
+                            options: ["Computer Aided Design", "Computer Assisted Drawing", "Central Area Design", "Computer Area Drawing"],
+                            correct: 0,
+                            explanation: "CAD stands for Computer Aided Design"
+                        },
+                        {
+                            question: "What is the purpose of a gear?",
+                            options: ["To store energy", "To transfer motion and force", "To create electricity", "To measure speed"],
+                            correct: 1,
+                            explanation: "Gears transfer motion and force between rotating parts"
+                        },
+                        {
+                            question: "What is a blueprint?",
+                            options: ["A type of paint", "A detailed technical drawing", "A type of paper", "A measurement tool"],
+                            correct: 1,
+                            explanation: "A blueprint is a detailed technical drawing used in engineering"
+                        }
+                    ],
+                    moderate: [
+                        {
+                            question: "What is the difference between stress and strain?",
+                            options: ["No difference", "Stress is force, strain is deformation", "Strain is force, stress is deformation", "Both are the same"],
+                            correct: 1,
+                            explanation: "Stress is the force applied, strain is the resulting deformation"
+                        },
+                        {
+                            question: "What is the purpose of a bearing?",
+                            options: ["To store energy", "To reduce friction", "To increase speed", "To measure force"],
+                            correct: 1,
+                            explanation: "Bearings reduce friction between moving parts"
+                        },
+                        {
+                            question: "What is the principle behind hydraulic systems?",
+                            options: ["Pascal's principle", "Newton's law", "Einstein's theory", "Darwin's theory"],
+                            correct: 0,
+                            explanation: "Hydraulic systems work on Pascal's principle of fluid pressure"
+                        },
+                        {
+                            question: "What is the difference between compression and tension?",
+                            options: ["No difference", "Compression pushes, tension pulls", "Tension pushes, compression pulls", "Both are the same"],
+                            correct: 1,
+                            explanation: "Compression is pushing force, tension is pulling force"
+                        },
+                        {
+                            question: "What is the purpose of a heat exchanger?",
+                            options: ["To generate heat", "To transfer heat between fluids", "To store heat", "To measure temperature"],
+                            correct: 1,
+                            explanation: "Heat exchangers transfer heat between two or more fluids"
+                        },
+                        {
+                            question: "What is the difference between efficiency and effectiveness?",
+                            options: ["No difference", "Efficiency is doing things right, effectiveness is doing the right things", "Effectiveness is doing things right, efficiency is doing the right things", "Both are the same"],
+                            correct: 1,
+                            explanation: "Efficiency is doing things right, effectiveness is doing the right things"
+                        },
+                        {
+                            question: "What is the purpose of a circuit breaker?",
+                            options: ["To generate electricity", "To protect electrical circuits", "To store energy", "To measure voltage"],
+                            correct: 1,
+                            explanation: "Circuit breakers protect electrical circuits from damage"
+                        },
+                        {
+                            question: "What is the difference between renewable and non-renewable energy?",
+                            options: ["No difference", "Renewable can be replenished, non-renewable cannot", "Non-renewable can be replenished, renewable cannot", "Both are the same"],
+                            correct: 1,
+                            explanation: "Renewable energy can be replenished naturally, non-renewable cannot"
+                        }
+                    ]
+                }
+            };
+
+            const templates = questionTemplates[subjectKey] || questionTemplates.math;
+            const difficultyQuestions = templates[difficulty] || templates.easy;
+            
+            // Shuffle and select questions
+            const shuffled = [...difficultyQuestions].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, questionCount).map((q, index) => ({
+                id: index + 1,
+                question: q.question,
+                options: q.options,
+                correct: q.correct,
+                explanation: q.explanation
+            }));
+        }
+
+        function showExamModal() {
+            const modal = document.getElementById('examModal');
+            const title = document.getElementById('examTitle');
+            const body = document.getElementById('examBody');
+            
+            title.textContent = `${currentExam.subjectName} Exam`;
+            body.innerHTML = generateExamHTML();
+            
+            modal.style.display = 'flex';
+        }
+
+        function generateExamHTML() {
+            const question = currentExam.questions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex + 1) / currentExam.questions.length) * 100;
+            
+            return `
+                <div class="question-container">
+                    <div class="question">${question.question}</div>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectAnswer(${index})">
+                                <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                                <div>${option}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="exam-navigation">
+                    <div class="exam-progress">
+                        Question ${currentQuestionIndex + 1} of ${currentExam.questions.length}
+                    </div>
+                    <div class="exam-buttons">
+                        <button class="btn btn-secondary" onclick="previousQuestion()" ${currentQuestionIndex === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" disabled>
+                            ${currentQuestionIndex === currentExam.questions.length - 1 ? 'Finish Exam' : 'Next'} 
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectAnswer(optionIndex) {
+            // Remove previous selection
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            document.querySelectorAll('.option')[optionIndex].classList.add('selected');
+            
+            // Store answer
+            examAnswers[currentQuestionIndex] = optionIndex;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentExam.questions.length - 1) {
+                currentQuestionIndex++;
+                document.getElementById('examBody').innerHTML = generateExamHTML();
+            } else {
+                finishExam();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                document.getElementById('examBody').innerHTML = generateExamHTML();
+                
+                // Restore previous answer if exists
+                if (examAnswers[currentQuestionIndex] !== undefined) {
+                    document.querySelectorAll('.option')[examAnswers[currentQuestionIndex]].classList.add('selected');
+                    document.getElementById('nextBtn').disabled = false;
+                }
+            }
+        }
+
+        function finishExam() {
+            // Calculate score
+            let correctAnswers = 0;
+            currentExam.questions.forEach((question, index) => {
+                if (examAnswers[index] === question.correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            const score = Math.round((correctAnswers / currentExam.questions.length) * 100);
+            const timeTaken = Math.round((Date.now() - examStartTime) / 1000);
+            
+            // Update lesson
+            const subject = stemSubjects[currentExam.subjectKey];
+            const lesson = subject.lessons.find(l => l.id === currentExam.lessonId);
+            if (lesson) {
+                lesson.examCompleted = true;
+            }
+            
+            // Update user points
+            const pointsEarned = Math.round(score / 10) * 5; // 5 points per 10% score
+            currentUser.totalPoints = (currentUser.totalPoints || 0) + pointsEarned;
+            localStorage.setItem('userData', JSON.stringify(currentUser));
+            
+            // Close exam modal
+            closeExamModal();
+            
+            // Show result modal
+            showResultModal(score, correctAnswers, currentExam.questions.length, pointsEarned, timeTaken);
+            
+            // Show celebration for good scores
+            if (score >= 70) {
+                showCelebration();
+            }
+        }
+
+        function showResultModal(score, correct, total, pointsEarned, timeTaken) {
+            const modal = document.getElementById('resultModal');
+            const container = document.getElementById('resultContainer');
+            
+            let iconClass = 'poor';
+            let message = 'Keep practicing!';
+            let icon = 'fa-redo';
+            
+            if (score >= 90) {
+                iconClass = 'excellent';
+                message = 'Excellent work!';
+                icon = 'fa-trophy';
+            } else if (score >= 80) {
+                iconClass = 'good';
+                message = 'Great job!';
+                icon = 'fa-medal';
+            } else if (score >= 70) {
+                iconClass = 'average';
+                message = 'Good effort!';
+                icon = 'fa-star';
+            }
+            
+            container.innerHTML = `
+                <div class="result-icon ${iconClass}">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="result-score">${score}%</div>
+                <div class="result-message">${message}</div>
+                <div class="result-details">
+                    <div class="result-detail">
+                        <h4>Correct Answers</h4>
+                        <p>${correct}/${total}</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Points Earned</h4>
+                        <p>+${pointsEarned}</p>
+                    </div>
+                    <div class="result-detail">
+                        <h4>Time Taken</h4>
+                        <p>${timeTaken}s</p>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="closeResultModal()">
+                    <i class="fas fa-check"></i>
+                    Continue Learning
+                </button>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function showCelebration() {
+            const thumbsUpCount = 15;
+            
+            for (let i = 0; i < thumbsUpCount; i++) {
+                setTimeout(() => {
+                    const thumbsUp = document.createElement('div');
+                    thumbsUp.className = 'thumbs-up';
+                    thumbsUp.innerHTML = '👍';
+                    thumbsUp.style.cssText = `
+                        position: absolute;
+                        font-size: 2rem;
+                        animation: fall 3s linear infinite;
+                        left: ${Math.random() * 100}%;
+                        animation-delay: ${Math.random() * 2}s;
+                    `;
+                    
+                    celebrationContainer.appendChild(thumbsUp);
+                    
+                    setTimeout(() => {
+                        if (thumbsUp.parentNode) {
+                            thumbsUp.parentNode.removeChild(thumbsUp);
+                        }
+                    }, 3000);
+                }, i * 200);
+            }
+        }
+
+        function closeExamModal() {
+            document.getElementById('examModal').style.display = 'none';
+        }
+
+        function closeResultModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            updateStudentInterface();
+            loadSubjects();
+        }
+
+        // Admin Dashboard Functions
+        function updateAdminInterface() {
+            document.getElementById("adminUserName").textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            document.getElementById("adminUserAvatar").textContent = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+        }
+
+        function loadSampleData() {
+            // Generate sample students data
+            studentsData = [
+                {
+                    id: 1,
+                    firstName: "John",
+                    lastName: "Doe",
+                    email: "john.doe@example.com",
+                    grade: 8,
+                    level: 5,
+                    score: 1250,
+                    progress: 75,
+                    completedLessons: 15,
+                    totalLessons: 20,
+                },
+                {
+                    id: 2,
+                    firstName: "Jane",
+                    lastName: "Smith",
+                    email: "jane.smith@example.com",
+                    grade: 9,
+                    level: 8,
+                    score: 1800,
+                    progress: 90,
+                    completedLessons: 18,
+                    totalLessons: 20,
+                },
+                {
+                    id: 3,
+                    firstName: "Mike",
+                    lastName: "Johnson",
+                    email: "mike.johnson@example.com",
+                    grade: 7,
+                    level: 3,
+                    score: 850,
+                    progress: 60,
+                    completedLessons: 12,
+                    totalLessons: 20,
+                },
+                {
+                    id: 4,
+                    firstName: "Sarah",
+                    lastName: "Wilson",
+                    email: "sarah.wilson@example.com",
+                    grade: 10,
+                    level: 12,
+                    score: 2200,
+                    progress: 95,
+                    completedLessons: 19,
+                    totalLessons: 20,
+                },
+                {
+                    id: 5,
+                    firstName: "David",
+                    lastName: "Brown",
+                    email: "david.brown@example.com",
+                    grade: 6,
+                    level: 2,
+                    score: 650,
+                    progress: 45,
+                    completedLessons: 9,
+                    totalLessons: 20,
+                },
+            ];
+
+            // Update stats
+            updateStats();
+        }
+
+        function updateStats() {
+            const totalStudents = studentsData.length;
+            const activeStudents = studentsData.filter((s) => s.progress > 0).length;
+            const totalLessons = studentsData.reduce((sum, s) => sum + s.totalLessons, 0);
+            const avgScore = Math.round(studentsData.reduce((sum, s) => sum + s.score, 0) / totalStudents);
+
+            document.getElementById("totalStudents").textContent = totalStudents;
+            document.getElementById("activeStudents").textContent = activeStudents;
+            document.getElementById("totalLessons").textContent = totalLessons;
+            document.getElementById("avgScore").textContent = avgScore;
+        }
+
+        function loadStudentsTable() {
+            const tbody = document.getElementById("studentsTableBody");
+            tbody.innerHTML = "";
+
+            studentsData.forEach((student) => {
+                const row = document.createElement("tr");
+
+                const scoreClass = student.score >= 1500 ? "high" : student.score >= 1000 ? "medium" : "low";
+
+                row.innerHTML = `
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="student-avatar">
+                                ${student.firstName.charAt(0)}${student.lastName.charAt(0)}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">${student.firstName} ${student.lastName}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-gray);">ID: ${student.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${student.email}</td>
+                    <td><span class="grade-badge">Grade ${student.grade}</span></td>
+                    <td>Level ${student.level}</td>
+                    <td><span class="score-badge ${scoreClass}">${student.score} pts</span></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 60px; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden;">
+                                <div style="width: ${student.progress}%; height: 100%; background: var(--primary-color); border-radius: 3px;"></div>
+                            </div>
+                            <span style="font-size: 0.8rem;">${student.progress}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-small btn-secondary" onclick="viewStudent(${student.id})" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-small btn-primary" onclick="editStudent(${student.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="deleteStudent(${student.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function viewStudent(studentId) {
+            const student = studentsData.find((s) => s.id === studentId);
+            if (student) {
+                alert(`Student Details:\n\nName: ${student.firstName} ${student.lastName}\nEmail: ${student.email}\nGrade: ${student.grade}\nLevel: ${student.level}\nScore: ${student.score} points\nProgress: ${student.progress}%\nCompleted Lessons: ${student.completedLessons}/${student.totalLessons}`);
+            }
+        }
+
+        function editStudent(studentId) {
+            const student = studentsData.find((s) => s.id === studentId);
+            if (student) {
+                alert(`Edit functionality for ${student.firstName} ${student.lastName} would be implemented here.`);
+            }
+        }
+
+        function deleteStudent(studentId) {
+            const student = studentsData.find((s) => s.id === studentId);
+            if (student && confirm(`Are you sure you want to delete ${student.firstName} ${student.lastName}?`)) {
+                studentsData = studentsData.filter((s) => s.id !== studentId);
+                loadStudentsTable();
+                updateStats();
+                showNotification(`${student.firstName} ${student.lastName} has been deleted.`, "success");
+            }
+        }
+
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
+        }
+
+        // Logout function
+        function logout() {
+            // Clear all authentication data
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userData");
+            sessionStorage.clear();
+
+            // Redirect to landing page
+            showLandingPage();
+        }
+
+        // Make functions available globally
+        window.selectAnswer = selectAnswer;
+        window.nextQuestion = nextQuestion;
+        window.previousQuestion = previousQuestion;
+        window.closeExamModal = closeExamModal;
+        window.closeResultModal = closeResultModal;
+        window.startExam = startExam;
+        window.startLesson = startLesson;
+        window.logout = logout;
+        window.scrollToSection = scrollToSection;
+        window.viewStudent = viewStudent;
+        window.editStudent = editStudent;
+        window.deleteStudent = deleteStudent;
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+    </script>
+</body>
+</html>
